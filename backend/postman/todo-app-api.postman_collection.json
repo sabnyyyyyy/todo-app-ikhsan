@@ -1,0 +1,271 @@
+{
+  "info": {
+    "name": "Todo App API",
+    "description": "Koleksi request untuk Tugas #4 dan #5 (Express.js + MySQL + JWT). Jalankan Login dulu; token otomatis tersimpan ke variabel {{jwt_token}}.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5001" },
+    { "key": "jwt_token", "value": "" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{jwt_token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "Tugas 4",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"Ikhsan Arlatin Sani\",\n  \"email\": \"ikhsan@mail.com\",\n  \"password\": \"rahasia123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{base_url}}/api/auth/register"
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Login berhasil (200)\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "if (res.data && res.data.token) {",
+                  "  pm.collectionVariables.set(\"jwt_token\", res.data.token);",
+                  "  console.log(\"Token tersimpan ke {{jwt_token}}\");",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ikhsan@mail.com\",\n  \"password\": \"rahasia123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{base_url}}/api/auth/login"
+          }
+        },
+        {
+          "name": "Post Todo",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"task\": \"Mengerjakan Tugas #4 Backend\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{base_url}}/api/todos"
+          }
+        },
+        {
+          "name": "Get Todos",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/todos"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tugas 5",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Login berhasil (200)\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "if (res.data && res.data.token) {",
+                  "  pm.collectionVariables.set(\"jwt_token\", res.data.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ikhsan@mail.com\",\n  \"password\": \"rahasia123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{base_url}}/api/auth/login"
+          }
+        },
+        {
+          "name": "1. Get Task (Sebelum Perubahan)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/todos"
+          }
+        },
+        {
+          "name": "2. Put Task 13",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"task\": \"Mengerjakan Tugas #5 Backend (selesai)\",\n  \"is_completed\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{base_url}}/api/todos/13"
+          }
+        },
+        {
+          "name": "3. Delete Task 14",
+          "request": {
+            "method": "DELETE",
+            "url": "{{base_url}}/api/todos/14"
+          }
+        },
+        {
+          "name": "4. Get Task 13 (Setelah Edit)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/todos/13"
+          }
+        },
+        {
+          "name": "5. Get Task 14 (Setelah Delete)",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/todos/14"
+          }
+        },
+        {
+          "name": "6. 404 Handler",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/tidak-ada"
+          }
+        },
+        {
+          "name": "7. Auth Handler (tanpa token)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "url": "{{base_url}}/api/todos"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tugas 6",
+      "item": [
+        {
+          "name": "1. Register",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"Ikhsan Arlatin Sani\",\n  \"email\": \"ikhsan@mail.com\",\n  \"password\": \"rahasia123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{base_url}}/api/auth/register"
+          }
+        },
+        {
+          "name": "2. Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "",
+                  "pm.test(\"Login berhasil (200)\", () => {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "if (res.data && res.data.token) {",
+                  "  pm.collectionVariables.set(\"jwt_token\", res.data.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ikhsan@mail.com\",\n  \"password\": \"rahasia123\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{base_url}}/api/auth/login"
+          }
+        },
+        {
+          "name": "3. Post Todo",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"task\": \"Mengerjakan Tugas #6 Backend\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": "{{base_url}}/api/todos"
+          }
+        },
+        {
+          "name": "4. Get Todos (page=1&perPage=5)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/todos?page=1&perPage=5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "todos"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "perPage", "value": "5" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "5. 404 Handler",
+          "request": {
+            "method": "GET",
+            "url": "{{base_url}}/api/tidak-ada"
+          }
+        }
+      ]
+    }
+  ]
+}
